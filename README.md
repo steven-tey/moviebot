@@ -32,7 +32,9 @@ To deploy this to vercel, all you gotta do is run `vercel --prod` in your termin
 ```
 If you run into the error `zsh: command vercel not found`, you might need to run the following:
 
-```export PATH="/Users/steventey/.npm-global/bin/:$PATH"```
+```
+export PATH="/Users/steventey/.npm-global/bin/:$PATH"
+```
 
 
 ## The AWS Lambda Function
