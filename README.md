@@ -5,7 +5,8 @@ Code repository for Moviebot – an NLP-powered movie recommendation chatbot, w
 
 This is a group project for my IL181 Practical Data Science tutorial (group members are Dennis, Pedro, and Ahmed).
 
-To run this locally, follow these steps:
+## Running this locally
+To run this program locally, follow these steps:
 
 1. Download the repo with `git clone https://github.com/steven-tey/moviebot.git`
 2. Create a virtual environment with `python3 -m venv venv`
