@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Moviebot</title>
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="https://svgshare.com/i/KJd.svg"
+    />
+    <meta property="og:title" content="Moviebot">
+    <meta property="og:description" content="An NLP powered movie recommendation chatbot, written in Python, HTML/CSS and JavaScript.">
+    <meta property="og:image" content="{{ url_for('static',filename='assets/thumbnail.png') }}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@FNTey" />
+    <meta name="twitter:creator" content="@FNTey">
+    <meta name="twitter:title" content="Moviebot">
+    <meta name="twitter:description" content="An NLP powered movie recommendation chatbot, written in Python, HTML/CSS and JavaScript.">
+    <meta name="twitter:image" content="https://nlp-moviebot.vercel.app/static/assets/thumbnail.png">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+      body {
+        font-family: soleil,sans-serif;
+      }
+      h1 {
+
+        display: inline-block;
+        font-size: 3em;
+        margin: 0;
+        padding: 14px;
+      }
+      h3 {
+        color: black;
+        font-size: 20px;
+        margin-top: 3px;
+        text-align: center;
+      }
+      #chatbox {
+        margin-left: auto;
+        margin-right: auto;
+        width: 40%;
+        margin-top: 60px;
+        overflow-y: auto;
+      }
+      #userInput {
+        margin-left: auto;
+        margin-right: auto;
+        width: 40%;
+        margin-top: 20px;
+        padding-bottom: 30px;
+      }
+      #textInput {
+        width: 90%;
+        border: none;
+        border-bottom: 3px solid black;
+        font-family: soleil,sans-serif;
+        padding: 8px 16px;
+        margin-top: 50px;
+        margin-bottom: 30px;
+        font-size: 17px;
+        outline: none;
+      }
+      .userText {
+        color: white;
+        font-family: soleil,sans-serif;
+        font-size: 17px;
+        text-align: right;
+        line-height: 30px;
+        background-color: #0078FF;
+        padding: 15px 20px;
+        border-radius: 10%;
+      }
+      .botText {
+        color: 050505;
+        font-family: soleil,sans-serif;
+        font-size: 17px;
+        text-align: left;
+        line-height: 30px;
+        background-color: #E4E6EB;
+        padding: 15px 20px;
+        border-radius: 10%;
+      }
+      .startOverText {
+        color: #0078FF;
+        font-family: soleil,sans-serif;
+        font-size: 17px;
+        text-align: right;
+        line-height: 30px;
+        background-color: #fff;
+        padding: 15px 20px;
+        border-radius: 10%;
+      }
+      .speech-bubble-user {
+        position: relative;
+        background: #0078FF;
+        border-radius: 15px;
+        margin: 10px auto;
+        clear: both;
+        float: right;
+        max-width: 100%;
+      }
+      .speech-bubble-bot {
+        position: relative;
+        background: #E4E6EB;
+        border-radius: 15px;
+        margin: 10px auto;
+        clear: both;
+        float: left;
+        max-width: 100%;
+      }
+      .speech-bubble-start-over {
+        position: relative;
+        border: solid 2px #0078FF;
+        background: #fff;
+        border-radius: 15px;
+        margin: 10px auto;
+        clear: both;
+        float: right;
+        max-width: 100%;
+        cursor: pointer;
+      }
+      .speech-bubble-start-over:hover {
+        background: #0078FF;
+        color: #fff;
+      }
+      .speech-bubble-start-over:hover .startOverText {
+        background: #0078FF;
+        color: #fff;
+      }
+      #tidbit {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 300px;
+      }
+      .boxed {
+        margin-left: auto;
+        margin-right: auto;
+        width: 78%;
+        margin-top: 60px;
+        margin-bottom: 60px;
+        border: 1px solid #E4E6EB;
+      }
+      .box {
+        border: 2px solid black;
+      }
+      @keyframes bubble-load{
+        0%{
+          transform: scale(0);
+          opacity: 0;
+        }
+        
+        25%{
+          transform: scale(1);
+          opacity: 1;
+        }
+        
+        100%{
+          transform: scale(0);
+          opacity: 0;
+        }
+      }
+      .loading-bubble{
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        margin: 10px 2px 0px 2px;
+        transform: scale(0);
+        opacity: 0;
+        background: #646161;
+        animation: bubble-load 1s infinite backwards;
+        border-radius: 50%;
+      }
+
+      .loading-bubble:nth-child(2){
+        animation-delay: .18s;
+      }
+
+      .loading-bubble:nth-child(3){
+        animation-delay: .36s;
+      }
+
+      .movie-scrollbar {
+        width: 100%;
+        overflow: auto;
+        white-space: nowrap;
+      }
+      .movie-box {
+        display: inline-block;
+        position: relative;
+        margin: 5px;
+        height: 200px;
+        width: 150px;
+        border: 1px solid #dadce0;
+        overflow: hidden;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease 0s;
+      }
+      .movie-box:hover {
+        height: 200px;
+        width: 250px;
+      }
+      .movie-box img {
+        position: absolute;
+        width: 100%;
+        top: -9999px;
+        bottom: -9999px;
+        left: -9999px;
+        right: -9999px;
+        margin: auto;
+        transition: all 0.3s ease 0s;
+      }
+      .movie-box:hover img {
+        filter: brightness(0.35);
+      }
+      .movie-title {
+        display: none;
+        position: absolute;
+        bottom: 35px;
+        left: 16px;
+        font-weight: 600;
+        font-size: 18px;
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+      }
+      .movie-details {
+        display: none;
+        position: absolute;
+        bottom: 10px;
+        left: 16px;
+        color: #fff;
+      }
+      .movie-box:hover .movie-title {
+        display: block;
+      }
+      .movie-box:hover .movie-details{
+        display: block;
+      }
+
+
+    </style>
+  </head>
+  <body>
+    <center>
+      <h1>
+        <img
+          src="https://svgshare.com/i/KJd.svg"
+          alt="Moviebot"
+          style="width:40px;height:40px; align:center;"
+        /> Moviebot
+      </h1>
+    </center>
+  <div class="box"></div>
+    <div class="boxed">
+      <div>
+        <div id="chatbox">
+          <img
+            src="https://svgshare.com/i/KJd.svg"
+            alt="Moviebot"
+            style="width:80px;height:80px;"
+          />
+          <p class="speech-bubble-bot botText">
+            Hi! I'm Moviebot! What movie genre(s) are you interested in? 
+            <br>
+            <i style="font-size: 16px; color: rgb(17, 39, 100)">(if multiple, please separate them with a comma)</i>
+          </p>
+        </div>
+        <div id="userInput">
+          <input id="textInput" type="text" name="msg" placeholder='Type "skip" to skip this question' autocomplete="off"/>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    var question = 1; 
+    var query = '';  
+
+    function formatRuntime(mins) {
+      if (mins == null) {
+        return 'N/A'
+      } else {
+        let h = Math.floor(mins / 60);
+        let m = mins % 60;
+        return `${h}h ${m}m`;
+      }
+    }
+    
+    function formatReleaseDate(release_date) {
+      if (release_date == null){
+        return 'N/A'
+      } else {
+        return release_date.slice(0, 4)
+      }
+    }
+
+    function startOver(){
+      question = 1; 
+      query = '';  
+      $("#textInput").attr('readonly', false);
+      $("#textInput").attr('placeholder', 'Type "skip" to skip this question');
+      document.getElementById("userInput").scrollIntoView({ block: "start", behavior: "smooth" });
+      $('#chatbox').children().last().removeClass();
+      $('#chatbox').children().last().html('<p class="speech-bubble-user userText">start over</p>');
+      var botHtml = "<div class='speech-bubble-bot botText'><div class='loading-bubble'></div><div class='loading-bubble'></div><div class='loading-bubble'></div></div>";
+      $("#chatbox").append(botHtml);
+      setTimeout(function(){
+          $('#chatbox').children().last().html("Sure, let's go again! What movie genre(s) are you interested in?<br><i style='font-size: 16px; color: rgb(17, 39, 100)'>(if multiple, please separate them with a comma)</i>");
+        }, 500);
+    }
+
+    function getBotResponse() {
+      var rawText = $("#textInput").val();
+      var userHtml = '<p class="speech-bubble-user userText">' + rawText + "</p>";
+      $("#textInput").val("");
+      $("#chatbox").append(userHtml);
+      document.getElementById("userInput").scrollIntoView({ block: "start", behavior: "smooth" });
+      // Last Question, Process Query
+      if (question == 0) {
+        question++;
+        if (rawText != 'skip') {
+          query += ' ' + rawText.toLowerCase().split(' ').join('').split(',').join(' ');
+        }
+        var botHtml = "<div class='speech-bubble-bot botText'><div class='loading-bubble'></div><div class='loading-bubble'></div><div class='loading-bubble'></div></div>";
+        $("#chatbox").append(botHtml);
+        $.get("/get", { msg: query }).done(function(data) {
+          var data = JSON.parse(data.replace(/\bNaN\b/g, 'null'));
+          $('#chatbox').children().last().html('Here are some movies for you:');
+          var botHtml = "<div class='movie-scrollbar'>";
+          for (var i=0; i<data.length; i++) {
+            botHtml += "<a href='https://www.imdb.com/title/"+data[i][1]+"' target='_blank'><div class='movie-box'><img src='http://img.omdbapi.com/?apikey=ea75cc5f&i="+data[i][1]+"'/><p class='movie-title'>"+data[i][0]+"</p><p class='movie-details'>"+formatRuntime(data[i][2])+" • "+formatReleaseDate(data[i][3])+" • IMBD: "+data[i][4]+"</p></div>";
+          };
+          botHtml += "</div>"
+          $("#chatbox").append(botHtml);
+          $("#chatbox").append("<div class='speech-bubble-start-over startOverText' onclick='startOver()'>start over</div>");
+          document.getElementById("userInput").scrollIntoView({ block: "start", behavior: "smooth" });
+          $("#textInput").attr('readonly', true);
+          $("#textInput").attr('placeholder', 'Click on "start over"');
+        });
+        
+      // First Question, Append to Query
+      } else if (question == 1) {
+        question++;
+        var botHtml = "<div class='speech-bubble-bot botText'><div class='loading-bubble'></div><div class='loading-bubble'></div><div class='loading-bubble'></div></div>";
+        $("#chatbox").append(botHtml);
+        if (rawText != 'skip') {
+          query += rawText.toLowerCase().split(' ').join('').split(',').join(' ');
+        }
+        setTimeout(function(){
+          $('#chatbox').children().last().html('Got it! And who are some actors within that genre that you love?<br><i style="font-size: 16px; color: rgb(17, 39, 100)">(if multiple, please separate them with a comma)</i>');
+        }, 500);
+      
+      // Second Question, Append to Query
+      } else {
+        question = 0;
+        var botHtml = "<div class='speech-bubble-bot botText'><div class='loading-bubble'></div><div class='loading-bubble'></div><div class='loading-bubble'></div></div>";
+        $("#chatbox").append(botHtml);
+        if (rawText != 'skip') {
+          query += ' ' + rawText.toLowerCase().split(' ').join('').split(',').join(' ');
+        }
+        setTimeout(function(){
+          $('#chatbox').children().last().html('Amazing! Last question: who are some directors within that genre that you love?<br><i style="font-size: 16px; color: rgb(17, 39, 100)">(if multiple, please separate them with a comma)</i>');
+        }, 500);
+      }
+    }
+
+    $("#textInput").keypress(function(e) {
+      if (e.which == 13) {
+        getBotResponse();
+      }
+    });
+  </script>
+</html>
