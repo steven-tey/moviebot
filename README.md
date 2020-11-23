@@ -1,7 +1,7 @@
 # Moviebot
 Code repository for Moviebot – an NLP-powered movie recommendation chatbot, written in Python, HTML/CSS and JavaScript & hosted on Vercel + AWS Lambda.
 
-![](https://github.com/steven-tey/moviebot/blob/master/static/assets/thumbnail.png)
+![](https://github.com/steven-tey/moviebot/blob/master/static/assets/thumbnail.gif)
 
 This is a group project for my IL181 Practical Data Science tutorial (group members are Dennis, Pedro, and Ahmed).
 
