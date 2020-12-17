@@ -3,7 +3,11 @@ Code repository for Moviebot – an NLP-powered movie recommendation chatbot, wr
 
 ![](https://github.com/steven-tey/moviebot/blob/master/static/assets/thumbnail.gif)
 
-This is a group project for my IL181 Practical Data Science tutorial (group members are Dennis, Pedro, and Ahmed).
+This is a group project for my IL181 Practical Data Science tutorial (group members are Dennis, Pedro, and Ahmed). Here's our write up on the project:
+- [Part 0: How to Build A Flexible Movie Recommender Chatbot In Python](https://pedro-debastos.medium.com/how-to-build-a-flexible-movie-recommender-chatbot-in-python-f111da4039c1)
+- [Part 1: Building a Content-based Recommender using a Cosine-Similarity Algorithm](https://a-elkhattam.medium.com/imdb-movie-recommendation-chatbot-942f84dfa0dc)
+- [Part 2: Building and deploying an NLP model to AWS Lambda and Vercel](https://steventey.medium.com/building-and-deploying-an-nlp-model-to-aws-lambda-and-vercel-ddc110d492ce)
+- [Part 3: Model Analysis and Future Recommendations](https://antela.medium.com/creating-an-imdb-movie-recommendation-chatbot-going-forward-d098327414d)
 
 ## 🖥 Running this locally 
 To run this program locally, follow these steps:
@@ -37,7 +41,7 @@ export PATH="/Users/steventey/.npm-global/bin/:$PATH"
 ```
 
 ## 💪 The AWS Lambda Function
-We are still making changes to the AWS Lambda function and will be publishing this soon!
+The AWS Lambda function can be found in this [`model.py` file](https://github.com/steven-tey/moviebot/blob/master/aws-lambda/model.py).
 
 ## 🐞 Question + Bug Fixes
 Feel free to contact me at [stey@minerva.kgi.edu](mailto:stey@minerva.kgi.edu) for more information about this project.
